@@ -20,7 +20,7 @@ showShareButtons = true
 disableThemeToggle = false
 
 [params.assets]
-favicon = "/icon.jpg"
+favicon = "/favicon.ico"
 iconHeight = 35
 
 [params.profileMode]
@@ -29,7 +29,7 @@ enabled = false
 # 网站左上角图标文字
 [params.label]
 text = "My Blog"
-icon = "/icon.jpg"
+icon = "/favicon.ico"
 iconHeight = 35
 
 [params.homeInfoParams]
