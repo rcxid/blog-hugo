@@ -2,3 +2,78 @@ baseURL = "https://blog.617495.xyz/"
 languageCode = "zh-CN"
 title = "扬帆起航"
 theme = "PaperMod"
+
+[params]
+# 评论
+comments = false
+# 代码复制按钮
+showCodeCopyButtons = true
+# 面包屑导航
+showBreadCrumbs = false
+# 阅读时间
+showReadingTime = true
+# 分享按钮
+showShareButtons = true
+# 分享按钮配置
+# shareButtons = ["linkedin", "twitter"]
+# 主题切换
+disableThemeToggle = false
+
+[params.assets]
+favicon = "/icon.jpg"
+iconHeight = 35
+
+[params.profileMode]
+enabled = false
+
+# 网站左上角图标文字
+[params.label]
+text = "My Blog"
+icon = "/icon.jpg"
+iconHeight = 35
+
+[params.homeInfoParams]
+title = "扬帆起航"
+content = "即使再小的帆也能远航"
+
+# https://github.com/adityatelange/hugo-PaperMod/wiki/Icons
+[[params.socialIcons]]
+name = "bilibili"
+url = "https://bilibili.com"
+
+[[params.socialIcons]]
+name = "github"
+url = "https://github.com"
+
+[[params.socialIcons]]
+name = "qq"
+url = "https://qq.com"
+
+[menu]
+[[menu.main]]
+identifier = "categories"
+name = "分类"
+url = "/categories/"
+weight = 10
+
+[[menu.main]]
+identifier = "tags"
+name = "标签"
+url = "/tags/"
+weight = 20
+
+[[menu.main]]
+identifier = "archives"
+name = "归档"
+url = "/archives/"
+weight = 30
+
+[[menu.main]]
+identifier = "search"
+name = "搜索"
+url = "/search/"
+weight = 40
+
+# 搜索功能相关
+[outputs]
+home = ["HTML", "RSS", "JSON"]
