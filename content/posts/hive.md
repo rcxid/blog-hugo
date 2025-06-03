@@ -7,7 +7,7 @@ tags = ["hive", "大数据"]
 draft = false
 
 [cover]
-image = "![1748921667120.png](https://img.617495.xyz/2025/06/03/683e6d4449731.png)"
+image = "https://img.617495.xyz/2025/06/03/683e6d4449731.png"
 +++
 
 ## Hive SQL的一些使用技巧
