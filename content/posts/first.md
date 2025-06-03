@@ -5,7 +5,6 @@ summary = "文章简介"
 categories = []
 tags = []
 draft = false
-lang = ""
 
 [cover]
 image = "文章封面图"
