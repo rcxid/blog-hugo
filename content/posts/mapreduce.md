@@ -1,9 +1,9 @@
 +++
-title = 'MapReduce'
-date = '2025-06-25T18:29:21+08:00'
+title = "MapReduce"
+date = "2025-06-25T18:29:21+08:00"
 summary = "mapreduce原理"
 categories = ["数据处理"]
-tags = ["大数据"，"hadoop", "mapreduce"]
+tags = ["大数据", "hadoop", "mapreduce"]
 draft = false
 +++
 
