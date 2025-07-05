@@ -21,7 +21,7 @@ draft = false
 use crate::extractor::jwt::DecryptClaims;
 use axum::body::Body;
 use axum::http::Request;
-use tower-http::trace::{HttpMakeClassifier, TraceLayer};
+use tower_http::trace::{HttpMakeClassifier, TraceLayer};
 use tracing::Span;
 
 /// 添加用户信息layer
