@@ -19,7 +19,7 @@ pip3 install --upgrade uv
 ```
 
 2、查看可以安装的python版本
-```
+```bash
 uv python list
 ```
 
