@@ -42,6 +42,7 @@ luci-app-openclash
 # 其他工具
 lsblk
 luci-i18n-ttyd-zh-cn
+kmod-usb-storage-uas
 ```
 
 ## 3、自定义首次启动脚本
