@@ -37,3 +37,8 @@ uv init --python 3.11 <project-name>
 ```bash
 uv venv --python 3.11
 ```
+
+6、项目添加依赖
+```bash
+uv add <dependency-name>
+```
