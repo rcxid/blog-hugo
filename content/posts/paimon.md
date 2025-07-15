@@ -215,3 +215,140 @@ from (
 ) as tmp
 group by user_id, ds;
 ```
+## 3、表元数据：系统表
+
+系统表包含两种，数据系统表和全局系统表。数据系统表包含每个Paimon数据表的元数据和信息，例如创建的快照和使用的选项。
+
+### 3.1、快照表：Snapshots Table
+
+通过快照表，可以看出表的数据发生变化的次数。
+
+```sql
+select * from my_table$snapshots;
+```
+
+### 3.2、Schemas Table
+
+通过查询schemas table可以知道，表的schema历史变更。
+
+```sql
+select * from my_table$schemas;
+
+-- 查询snapshot_id为3的数据schema信息
+select
+  s.snapshot_id,
+  t.schema_id,
+  t.fields
+from my_table$snapshots s
+join my_table$schemas t
+on s.schema_id = t.schema_id
+where snapshot_id = 3;
+```
+
+### 3.3、选项表：Options Table
+
+表的配置信息
+
+```sql
+select * from my_table$options;
+```
+
+### 3.4、日志审计表：Audit log Table
+
++I、-U、+U、-D
+
+```sql
+select * from my_table$audit_log;
+```
+
+### 3.5、Binlog Table
+
+有点类似上面的表，官方文档说，更新前更新后会合并到一行。
+
+```sql
+select * from pk_table$binlog;
+```
+
+### 3.6、读优化表：Read-optimized Table
+
+读写方式类似追加表
+
+### 3.7、文件表：Files Table
+
+```sql
+select * from file_table$files /* OPTIONS('scan.snapshot-id'='3') */;
+```
+
+### 3.8、Tags Table
+
+```sql
+select * from my_table$tags;
+```
+
+### 3.9、Branches Table
+
+```sql
+select * from my_table$branches;
+```
+
+### 3.10、消费者表：Consumers Table
+
+消费者id以及要消费的下一个snapshot id
+
+```sql
+select * from my_table$consumers;
+```
+
+### 3.11、Manifests Table
+
+```sql
+select * from my_table$manifests;
+```
+
+### 3.12、Aggregation fields Table
+
+后面学到聚合表，再看看这个。
+
+```sql
+select * from my_table$aggregation_fields;
+```
+
+### 3.13、分区表：Partitions Table
+
+```sql
+select * from my_table$partitions;
+```
+
+### 3.14、Buckets Table
+
+```sql
+select * from my_table$buckets;
+```
+
+### 3.15、Statistic Table
+
+```sql
+select * from my_table$statistics;
+```
+
+### 3.16、Table Indexes Table
+
+```sql
+select * from my_table$table_indexes;
+```
+
+### 3.17、ALL Options Table（系统表）
+
+hive catalog查询报错，另外两个查询正常。
+
+```sql
+use sys;
+show tables;
+select * from sys.all_table_options;
+```
+
+### 3.18、Catalog Options Table（系统表）
+
+```sql
+select * from sys.catalog_options;
+```
