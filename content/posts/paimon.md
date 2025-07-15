@@ -352,3 +352,81 @@ select * from sys.all_table_options;
 ```sql
 select * from sys.catalog_options;
 ```
+
+## 4、主键表
+
+定义表的时候可以使用主键，主键可以包含多个列，paimon强制在bucket中使用主键进行排序。
+
+### 4.1、桶：bucket
+
+无分区表和分区表分区下的数据，会再分成桶进行保存。每个bucket目录都包含一个LSM Tree和其变更日志。
+
+bucket分桶由数据中一个或多个列的hash值决定，可以使用bucket-key选项定义决定bucket分桶的列。如果没有定义，主键表默认使用主键，非主键表使用整条数据。
+
+bucket是用于读写的最小存储单元，因此bucket的数量限制了最大的处理并行度。bucket数量不应该太多，因为它会导致大量小文件和低读取性能。每个bucket中的推荐数据大小约为200MB-1GB。
+
+#### 4.1.1、固定分桶模式
+
+通过'bucket' = 'n'设置分桶数（n > 0），根据Math.abs(key_hashcode % numBuckets)计算数据属于哪个桶。
+
+重新调整桶数，只能通过离线进程完成。桶的数量过多会导致小文件过多，桶的数量过少会导致写入性能问题。
+
+#### 4.1.2、动态分桶模式
+
+主键表默认使用动态分桶，或者通过'bucket' = '-1'设置。
+
+- 选项1: 'dynamic-bucket.target-row-num': 一个bucket的数据条数
+- 选项2: 'dynamic-bucket.initial-buckets': 初始bucket数量
+
+>仅支持单个写入任务。
+
+- 普通动态分桶模式
+	- 当表没有分区，或者主键包含所有的分区字段。动态分桶模式使用HASH索引来维护从键到桶的映射，它比固定分桶模式需要更多的内存。1亿条数据多占用1G内存。普通动态桶模式支持排序压缩以加快查询速度。
+- 跨分区动态分桶模式
+	- 主键没有包含所有的分区键字段。
+		1. Deduplicate: 删除旧分区数据，新数据插入到新分区。
+		2. PartialUpdate & Aggregation: 新数据插入到旧分区。
+		3. FirstRow: 存在旧数据，则忽略新数据。
+
+### 4.2、LSM Tree
+
+Paimon采用LSM Tree (log-structured merge-tree)作为文件存储的数据结构。
+### 4.3、表模式
+
+#### 4.3.1、Merge on read
+
+MOR是主键表的默认模式。
+
+优点：
+- 写入性能很好。
+缺点：
+- 读取性能一般。
+- 一个LSM Tree只能由一个线程读取，读取并行度受限。
+- 当分桶数据量很大时，读取性能会非常低。bucket大小推荐200M-1G。
+- 由于合并过程，不能对非主键列执行基于过滤器的数据跳过。
+#### 4.3.2、Copy on write
+
+可以通过下面配置表模式为COW。COW模式每次写入都会进行合并操作，所有数据都将被合并到最新。读取时，不需要合并，读取性能最高。但每次写入都需要完全合并，写入放大非常严重。
+```sql
+ALTER TABLE orders SET ('full-compaction.delta-commits' = '1');
+```
+
+优点：
+- 读取性能很好。
+缺点：
+- 写入性能非常差。
+
+#### 4.3.3、Merge on write
+
+可以通过下面配置表模式为MOW。由于Paimon的LSM结构，它能够通过主键进行查询。我们可以在写入时生成删除向量文件，表示文件中的哪些数据已被删除。这可以在读取过程中直接过滤掉不必要的行，这相当于合并，不会影响读取性能。
+```sql
+ALTER TABLE orders SET ('deletion-vectors.enabled' = 'true');
+```
+
+优点：
+- 读写性能都很好
+缺点：
+- 数据延迟问题（没看懂，后续探索一下）
+#### 4.3.4、MOR Read Optimized
+
+后续用到再探索
