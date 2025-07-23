@@ -430,3 +430,34 @@ ALTER TABLE orders SET ('deletion-vectors.enabled' = 'true');
 #### 4.3.4、MOR Read Optimized
 
 后续用到再探索
+
+### 4.4、合并引擎
+
+当paimon主键表，接收到多条相同主键的数据时。paimon会将多条数据合并成一条，以保证主键的唯一性。合并引擎就是合并数据的方式。
+
+deduplicate是默认的合并引擎，paimon会保存主键最新的数据，丢弃相同主键的旧数据。
+
+partial-update: 部分列更新，为null的列，会被后面到来的非null数据更新，非null的列，会被后面到来非null的值更新。可以设计序列组，实现部分列一起更新（全非null才更新）
+
+```sql
+create table normal_merge_pu_tbl (
+  k int,
+  a int,
+  b int,
+  c int,
+primary key (k) not enforced
+) with (
+  'merge-engine' = 'partial-update'
+);
+
+insert into normal_merge_pu_tbl values (1, 23, 10, cast(null as int));
+-- 查询时设置: set 'execution.runtime-mode' = 'batch';
+select * from normal_merge_pu_tbl;
+-- 1 | 23 | 10 | <NULL>
+insert into normal_merge_pu_tbl values (1, cast(null as int), cast(null as int), 99);
+select * from normal_merge_pu_tbl;
+-- 1 | 23 | 10 | 99
+insert into normal_merge_pu_tbl values (1, 25, 13, cast(null as int));
+select * from normal_merge_pu_tbl;
+-- 1 | 25 | 13 | 99
+```
