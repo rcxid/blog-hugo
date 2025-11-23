@@ -50,7 +50,13 @@ kmod-usb-storage-uas
 
 openwrt默认的 lan ip 为192.168.1.1，一般会和家中的上游光猫网络ip冲突。
 ```bash
-uci set network.lan.ipaddr=192.168.3.1
+uci set network.lan.ipaddr='192.168.100.1'
+# r2s对调网口
+uci del network.cfg030f15.ports
+uci add_list network.cfg030f15.ports='eth0'
+uci set network.wan.device='eth1'
+uci set network.wan6.device='eth1'
+# 提交网络配置
 uci commit network
 ```
 
