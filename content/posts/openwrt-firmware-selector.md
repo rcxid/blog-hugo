@@ -42,7 +42,7 @@ luci-app-openclash
 # 其他工具
 lsblk
 luci-i18n-ttyd-zh-cn
-kmod-usb-storage-uas
+kmod-usb-storage-uas（解决不识别部分U盘问题）
 ```
 
 ## 3、自定义首次启动脚本
