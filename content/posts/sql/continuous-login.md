@@ -3,7 +3,7 @@ title = "SQL统计连续登录用户问题"
 date = "2025-07-06T12:11:26+08:00"
 summary = "SQL统计连续登录用户问题：LEAD和ROW_NUMBER函数实现"
 categories = ["数据处理"]
-tags = ["hive", "sql"]
+tags = ["sql"]
 draft = false
 +++
 
